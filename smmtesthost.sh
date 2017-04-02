@@ -2,11 +2,29 @@
 #Install pre-requisites and enable secure remote connection, do not forget to grab you SSH keys to access later. Must have your Fedora 25 workstation ISO located in /var/lib/libvirt/images be
 fore running this script
 
+#Stop and disable useless services for security
+systemctl stop telnet.service
+systemctl stop rsh.service
+systemctl stop rlogin.service
+systemctl stop vsftpd.service
+
+systemctl disable telnet.service
+systemctl disable rsh.service
+systemctl disable rlogin.service
+systemctl disable vsftpd.service
+
 
 dnf -y install xorg-x11-xauth pixman-devel spice-server-devel libvirt-client gcc-c++ nasm libuuid-devel acpica-tools
 
 systemctl enable sshd
 systemctl start sshd
+
+sed -i 's,^\(PasswordAuthentication=\).*,\1'no',' /etc/ssh/sshd_config
+ssh-keygen -t rsa -b 4096 -N '' -f smmtest.rsa
+cat smmtest.rsa.pub >> ./authorized_keys
+cp -v ./authorized_keys ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+ 
 
 
 #Enable libvirt 
@@ -147,4 +165,4 @@ virsh define ovmf.fedora.q35.template
 
 
 
-
+ehco 'Please copy smmtest.rsa to your remote access machine' 
