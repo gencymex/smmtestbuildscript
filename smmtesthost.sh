@@ -1,25 +1,15 @@
 
 #Install pre-requisites and enable secure remote connection, do not forget to grab you SSH keys to access later. Must have your Fedora 25 workstation ISO located in /var/lib/libvirt/images be
-fore running this script
+#fore running this script
 
-#Stop and disable useless services for security
-systemctl stop telnet.service
-systemctl stop rsh.service
-systemctl stop rlogin.service
-systemctl stop vsftpd.service
+dnf group install with-optional virtualization
 
-systemctl disable telnet.service
-systemctl disable rsh.service
-systemctl disable rlogin.service
-systemctl disable vsftpd.service
-
-
-dnf -y install xorg-x11-xauth pixman-devel spice-server-devel libvirt-client gcc-c++ nasm libuuid-devel acpica-tools
+dnf -y install xorg-x11-xauth pixman-devel spice-server-devel gcc-c++ nasm libuuid-devel acpica-tools patch python
 
 systemctl enable sshd
 systemctl start sshd
 
-sed -i 's,^\(PasswordAuthentication=\).*,\1'no',' /etc/ssh/sshd_config
+sed -i 's,^\(PasswordAuthentication \).*,\1'no',' /etc/ssh/sshd_config
 ssh-keygen -t rsa -b 4096 -N '' -f smmtest.rsa
 cat smmtest.rsa.pub >> ./authorized_keys
 cp -v ./authorized_keys ~/.ssh/authorized_keys
@@ -37,9 +27,6 @@ systemctl start virtlogd
 
 
 #Check to see if QEMU is installed, if installed then remove, if not installed, then download and build
-
-
- qemu-system-x86_64 -version
 
 
 QEMU_SOURCE=$HOME/qemu
@@ -93,17 +80,12 @@ git clone https://github.com/tianocore/edk2.git $EDK2_SOURCE
 
 
 #Patch the EDK2 source code SSL library
-OPENSSL_VER=openssl-1.0.2j
 
 cd $EDK2_SOURCE/CryptoPkg/Library/OpensslLib
 
-wget -q -O - http://www.openssl.org/source/${OPENSSL_VER}.tar.gz \
-| tar -x -z
+git clone -b OpenSSL_1_1_0e https://github.com/openssl/openssl openssl
 
-cd ${OPENSSL_VER}
-patch -p1 -i ../EDKII_${OPENSSL_VER}.patch
-cd ..
-./Install.sh
+perl process_files.pl
 
 
 
@@ -165,4 +147,4 @@ virsh define ovmf.fedora.q35.template
 
 
 
-ehco 'Please copy smmtest.rsa to your remote access machine' 
+echo 'Please copy smmtest.rsa to your remote access machine' 
