@@ -8,7 +8,7 @@ QEMU_SOURCE=$HOME/qemu
 QEMU_BUILD=$HOME/qemu-build
 QEMU_INSTALL=/opt/qemu
 
-dnf group install with-optional virtualization
+dnf -y group install with-optional virtualization
 
 dnf -y install xorg-x11-xauth pixman-devel spice-server-devel gcc-c++ nasm libuuid-devel acpica-tools patch python
 
@@ -73,7 +73,7 @@ rmmod kvm_intel
 modprobe kvm_intel
 
 #verifying the setting, if everything was done right the output should be "Y"
-
+echo "Verifying  nested VM capability:"
 cat /sys/module/kvm_intel/parameters/nested
 
 
