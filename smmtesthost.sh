@@ -1,6 +1,12 @@
-
+#!/bin/bash
 #Install pre-requisites and enable secure remote connection, do not forget to grab you SSH keys to access later. Must have your Fedora 25 workstation ISO located in /var/lib/libvirt/images be
 #fore running this script
+
+#define script variables for QEMU and EDK2 first
+EDK2_SOURCE= $HOME/edk2
+QEMU_SOURCE=$HOME/qemu
+QEMU_BUILD=$HOME/qemu-build
+QEMU_INSTALL=/opt/qemu
 
 dnf group install with-optional virtualization
 
@@ -29,9 +35,6 @@ systemctl start virtlogd
 #Check to see if QEMU is installed, if installed then remove, if not installed, then download and build
 
 
-QEMU_SOURCE=$HOME/qemu
-QEMU_BUILD=$HOME/qemu-build
-QEMU_INSTALL=/opt/qemu
 
 git clone git://git.qemu.org/qemu.git $QEMU_SOURCE
 cd $QEMU_SOURCE
@@ -75,11 +78,10 @@ cat /sys/module/kvm_intel/parameters/nested
 
 
 #Time to clone the edk2 repo, change the EDK2_SOURCE to the location that you store your source code if necessary
-EDK2_SOURCE=$HOME/edk2
 git clone https://github.com/tianocore/edk2.git $EDK2_SOURCE
 
 
-#Patch the EDK2 source code SSL library
+#Patch the EDK2 source code SSL library. The process has changed since Laszlo created the tutorial page. the script called is now process_files.
 
 cd $EDK2_SOURCE/CryptoPkg/Library/OpensslLib
 
