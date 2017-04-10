@@ -2,6 +2,7 @@
 #Install pre-requisites and enable secure remote connection, do not forget to grab you SSH keys to access later. Must have your Fedora 25 workstation ISO located in /var/lib/libvirt/images be
 #fore running this script
 
+touch $HOME/edk2
 #define script variables for QEMU and EDK2 first
 EDK2_SOURCE= $HOME/edk2
 QEMU_SOURCE=$HOME/qemu
