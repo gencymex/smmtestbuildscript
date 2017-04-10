@@ -96,7 +96,7 @@ cd $EDK2_SOURCE/CryptoPkg/Library/OpensslLib
 perl process_files.pl
 
 
-
+#for some reason the $EDK2_SOURCE changes to just "/root/" instead of "/root/edk2/" for me and the script fails at this point because it cannout source the edksetup.sh in "/root/"
 
 #Build OVMF
 cd $EDK2_SOURCE
