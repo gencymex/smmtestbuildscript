@@ -1,6 +1,5 @@
 #!/bin/bash
-#Install pre-requisites and enable secure remote connection, do not forget to grab you SSH keys to access later. Must have your Fedora 25 workstation ISO located in /var/lib/libvirt/images be
-#fore running this script
+#This script will install pre-requisites and enable secure remote connection, do not forget to grab you SSH keys to access later. Must have your Fedora 25 workstation ISO located in /var/lib/libvirt/images before running this script.
 
 
 #define script variables for QEMU and EDK2 first
@@ -9,7 +8,7 @@ EDK2_SOURCE=$HOME/edk2
 QEMU_SOURCE=$HOME/qemu
 QEMU_BUILD=$HOME/qemu-build
 QEMU_INSTALL=/opt/qemu
-
+OVMF_INSTALL=/opt/edk2/share/ovmf-smm
 
 dnf -y group install with-optional virtualization
 
@@ -26,10 +25,10 @@ sed -i 's,^\(PasswordAuthentication \).*,\1'no',' /etc/ssh/sshd_config
 ssh-keygen -t rsa -b 4096 -N '' -f smmtest.rsa
 cat smmtest.rsa.pub >> ./authorized_keys
 cp -v ./authorized_keys ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
+chmod 755 ~/.ssh
+chmod 644 ~/.ssh/authorized_keys
+
  
-
-
 #Enable libvirt 
 
 systemctl enable libvirtd
@@ -41,11 +40,7 @@ systemctl start virtlogd
 
 #Check to see if QEMU is installed, if installed then remove, if not installed, then download and build
 
-
-
-git clone git://git.qemu.org/qemu.git $QEMU_SOURCE
-git clone https://github.com/tianocore/edk2.git $EDK2_SOURCE
-git clone -b OpenSSL_1_1_0e https://github.com/openssl/openssl $EDK2_SOURCE/CryptoPkg/Library/OpensslLib/openssl
+#Build and install QEMU
 cd $QEMU_SOURCE
 git checkout a0def594286d
 mkdir -p -v $QEMU_BUILD
@@ -86,21 +81,15 @@ echo "Verifying  nested VM capability:"
 cat /sys/module/kvm_intel/parameters/nested
 
 
-#Time to clone the edk2 repo, change the EDK2_SOURCE to the location that you store your source code if necessary
-
-
 #Patch the EDK2 source code SSL library. The process has changed since Laszlo created the tutorial page. the script called is now process_files.
 
 cd $EDK2_SOURCE/CryptoPkg/Library/OpensslLib
 
 perl process_files.pl
 
-
-#for some reason the $EDK2_SOURCE changes to just "/root/" instead of "/root/edk2/" for me and the script fails at this point because it cannout source the edksetup.sh in "/root/"
-
 #Build OVMF
 cd $EDK2_SOURCE
-source edksetup.sh
+. ./edksetup.sh
 make -C "$EDK_TOOLS_PATH"
 
 build -a IA32 -a X64 -p OvmfPkg/OvmfPkgIa32X64.dsc \
@@ -119,8 +108,6 @@ build -a IA32 -p OvmfPkg/OvmfPkgIa32.dsc \
 
 
 #Time to install the OVMF
-OVMF_INSTALL=/opt/edk2/share/ovmf-smm
-
 mkdir -p -v $OVMF_INSTALL
 
 install -m 0644 -v \
@@ -155,4 +142,4 @@ virsh define ovmf.fedora.q35.template
 
 
 
-echo 'Please copy smmtest.rsa to your remote access machine' 
+echo "This host for testing SMM with QEMU, KVM, and libvirt is now configured and ready to run the VM for testing remotely. Please move 'smmtest.rsa' to your remote access machine and begin the testing."
