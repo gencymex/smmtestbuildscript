@@ -4,14 +4,20 @@
 
 
 #define script variables for QEMU and EDK2 first
+
 EDK2_SOURCE=$HOME/edk2
 QEMU_SOURCE=$HOME/qemu
 QEMU_BUILD=$HOME/qemu-build
 QEMU_INSTALL=/opt/qemu
 
+
 dnf -y group install with-optional virtualization
 
 dnf -y install xorg-x11-xauth pixman-devel spice-server-devel gcc-c++ nasm libuuid-devel acpica-tools patch python
+
+git clone git://git.qemu.org/qemu.git $QEMU_SOURCE
+git clone https://github.com/tianocore/edk2.git $EDK2_SOURCE
+git clone -b OpenSSL_1_1_0e https://github.com/openssl/openssl $EDK2_SOURCE/CryptoPkg/Library/OpensslLib/openssl
 
 systemctl enable sshd
 systemctl start sshd
@@ -38,6 +44,8 @@ systemctl start virtlogd
 
 
 git clone git://git.qemu.org/qemu.git $QEMU_SOURCE
+git clone https://github.com/tianocore/edk2.git $EDK2_SOURCE
+git clone -b OpenSSL_1_1_0e https://github.com/openssl/openssl $EDK2_SOURCE/CryptoPkg/Library/OpensslLib/openssl
 cd $QEMU_SOURCE
 git checkout a0def594286d
 mkdir -p -v $QEMU_BUILD
@@ -79,14 +87,11 @@ cat /sys/module/kvm_intel/parameters/nested
 
 
 #Time to clone the edk2 repo, change the EDK2_SOURCE to the location that you store your source code if necessary
-git clone https://github.com/tianocore/edk2.git $EDK2_SOURCE
 
 
 #Patch the EDK2 source code SSL library. The process has changed since Laszlo created the tutorial page. the script called is now process_files.
 
 cd $EDK2_SOURCE/CryptoPkg/Library/OpensslLib
-
-git clone -b OpenSSL_1_1_0e https://github.com/openssl/openssl openssl
 
 perl process_files.pl
 
