@@ -4,7 +4,7 @@
 
 
 #define script variables for QEMU and EDK2 first
-EDK2_SOURCE= $HOME/edk2
+EDK2_SOURCE=$HOME/edk2
 QEMU_SOURCE=$HOME/qemu
 QEMU_BUILD=$HOME/qemu-build
 QEMU_INSTALL=/opt/qemu
