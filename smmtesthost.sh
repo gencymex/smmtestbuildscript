@@ -8,7 +8,7 @@ EDK2_SOURCE=$HOME/edk2
 OVMF_INSTALL=/opt/edk2/share/ovmf-smm
 TEMPLATE_DIR=${pwd}
 
-dnf -y group install with-optional virtualization
+dnf -y group install --with-optional virtualization
 
 dnf -y install xorg-x11-xauth pixman-devel spice-server-devel gcc-c++ nasm libuuid-devel acpica-tools patch python
 
@@ -21,7 +21,7 @@ systemctl start sshd
 sed -i 's,^\(PasswordAuthentication \).*,\1'no',' /etc/ssh/sshd_config
 ssh-keygen -t rsa -b 4096 -N '' -f smmtest.rsa
 cat smmtest.rsa.pub >> ./authorized_keys
-cp -v ./authorized_keys ~/.ssh/authorized_keys
+mv -v ./authorized_keys ~/.ssh/authorized_keys
 chmod 755 ~/.ssh
 chmod 644 ~/.ssh/authorized_keys
 
