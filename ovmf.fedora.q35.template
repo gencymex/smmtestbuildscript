@@ -38,7 +38,7 @@
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw' cache='writeback'/>
-      <source file='/var/lib/libvirt/images/Fedora-Workstation-Live-x86_64-25-1.3.iso'/>
+      <source file='/var/lib/libvirt/images/Fedora-Workstation-Live-x86_64-26-1.5.iso'/>
       <target dev='sdb' bus='scsi'/>
       <readonly/>
       <shareable/>
