@@ -9,6 +9,7 @@ QEMU_SOURCE=$HOME/qemu
 QEMU_BUILD=$HOME/qemu-build
 QEMU_INSTALL=/opt/qemu
 OVMF_INSTALL=/opt/edk2/share/ovmf-smm
+TEMPLATE_DIR=${pwd}
 
 dnf -y group install with-optional virtualization
 
@@ -135,9 +136,7 @@ qemu-img create -f qcow2 \
 
 #get template to virtual host
 
-cd $HOME
-wget https://github.com/tianocore/tianocore.github.io/wiki/libvirt-domain-templates/ovmf.fedora.q35.template
-
+cd $TEMPLATE_DIR
 virsh define ovmf.fedora.q35.template
 
 
