@@ -6,7 +6,9 @@
 
 EDK2_SOURCE=$HOME/edk2
 OVMF_INSTALL=/opt/edk2/share/ovmf-smm
-TEMPLATE_DIR=${pwd}
+
+#copy the ovmf template for use at the end of this script
+cp ./ovmf.fedora.q35.template $HOME
 
 dnf -y group install --with-optional virtualization
 
@@ -101,9 +103,6 @@ qemu-img create -f qcow2 \
   /var/lib/libvirt/images/ovmf.fedora.q35.img 100G
 
 #get template to virtual host
-
-cd $TEMPLATE_DIR
-cp ./ovmf.fedora.q35.template $HOME
 
 #for some reason the script does not find the template in the repo directory. We must copy it to the $HOME directory and then execute virsh
 cd $HOME
