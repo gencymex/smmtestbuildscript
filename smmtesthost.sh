@@ -103,6 +103,10 @@ qemu-img create -f qcow2 \
 #get template to virtual host
 
 cd $TEMPLATE_DIR
+cp ./ovmf.fedora.q35.template $HOME
+
+#for some reason the script does not find the template in the repo directory. We must copy it to the $HOME directory and then execute virsh
+cd $HOME
 virsh define ovmf.fedora.q35.template
 
 
