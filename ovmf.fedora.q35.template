@@ -28,7 +28,7 @@
     <suspend-to-disk enabled='no'/>
   </pm>
   <devices>
-    <emulator>/opt/qemu/bin/qemu-system-x86_64</emulator>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' cache='writeback' error_policy='enospace' discard='unmap'/>
       <source file='/var/lib/libvirt/images/ovmf.fedora.q35.img'/>
