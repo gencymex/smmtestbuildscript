@@ -1,7 +1,7 @@
 # smmtestbuildscript
 A script for building the system from Testing SMM with QEMU, KVM and libvirt based on the guide from the Tiano Core EDK2 wiki with Fedora 26 "https://github.com/tianocore/tianocore.github.io/wiki/Testing-SMM-with-QEMU,-KVM-and-libvirt" and can be seen below.
 
-NOTE: Some things might have changed in EDK2 since the original was written, so this script varies in some areas from the guide. Please update the fresh install, and copy the Fedora 26 ISO file to /var/lib/libvirt/images/ before running this script. This script does not support the Windows sections of Lazslo's guide.
+NOTE: Please update the fresh install, and copy the Fedora 26 ISO file to /var/lib/libvirt/images/ before running this script. This script does not support the Windows sections of Lazslo's guide.
 
 
 
